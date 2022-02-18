@@ -17,11 +17,29 @@
  */
 struct list_head *q_new()
 {
-    return NULL;
+    // create new head
+    struct list_head *head = malloc(sizeof(struct list_head));
+    // store next node in pointer
+    if (head != NULL) {
+        INIT_LIST_HEAD(head);
+    }
+
+    return head;
 }
 
 /* Free all storage used by queue */
-void q_free(struct list_head *l) {}
+void q_free(struct list_head *l)
+{
+    if (l == NULL) {
+        return;
+    }
+    while (!list_empty(l)) {
+        struct list_head *tmp = l;
+        l = l->next;
+        list_del(tmp);
+        free(tmp);
+    }
+}
 
 /*
  * Attempt to insert element at head of queue.
