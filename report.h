@@ -4,15 +4,10 @@
 #include <stdarg.h>
 #include <stdbool.h>
 
-/* Default reporting level.  Must recompile when change */
-#ifndef RPT
-#define RPT 2
-#endif
-
 /* Ways to report interesting behavior and errors */
 
 /* Things to report */
-typedef enum { MSG_WARN, MSG_ERROR, MSG_FATAL } message_t;
+typedef enum { MSG_WARN, MSG_ERROR, MSG_FATAL, N_MSG } message_t;
 
 /* Buffer sizes */
 #define MAX_CHAR 512
@@ -49,13 +44,10 @@ void free_array(void *b, size_t cnt, size_t bytes);
 /* Free string saved by strsave_or_fail */
 void free_string(char *s);
 
-/** Time measurement.  **/
-
 /* Time counted as fp number in seconds */
 void init_time(double *timep);
 
-/* Compute time since last call with this timer
-   and reset timer */
+/* Compute time since last call with this timer and reset timer */
 double delta_time(double *timep);
 
 #endif /* LAB0_REPORT_H */
