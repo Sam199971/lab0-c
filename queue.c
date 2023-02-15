@@ -38,28 +38,111 @@ void q_free(struct list_head *l)
     }
 }
 
+/* Create New Element*/
+
+static inline element_t *new_element(const char *s){
+    if(!s){
+        return NULL;
+    }
+
+    element_t *new = malloc(sizeof(element_t));
+
+    if(!new){
+        return NULL;
+    }
+
+    size_t len = strlen(s);
+    if(len > len + 1){
+        free(new);
+        return NULL;
+    }
+
+    new->value = malloc(len+1);
+    if(!new->value){
+        free(new);
+        return NULL;
+    }
+
+    memcpy(new->value, s, len);
+
+    new->value[len] = '\0';
+    return new;
+}
+
+
 /* Insert an element at head of queue */
 bool q_insert_head(struct list_head *head, char *s)
 {
+    if(!head){
+        return false;
+    }
+
+    element_t *new = new_element(s);
+
+    if(!new){
+        return false;
+    }
+
+    list_add(&new->list, head);
+
+
     return true;
 }
 
 /* Insert an element at tail of queue */
 bool q_insert_tail(struct list_head *head, char *s)
 {
+    if(!head){
+        return false;
+    }
+
+    element_t *new = new_element(s);
+
+    if(!new){
+        return false;
+    }
+
+    list_add_tail(&new->list, head);
+
+
     return true;
+}
+
+/* Remove element */
+static inline element_t *remove_element(element_t *target, char *sp, size_t bufsize){
+    if(!target){
+        return NULL;
+    }
+
+    if(sp && bufsize != 0){
+        size_t len = strlen(target->value);
+        if(len > bufsize - 1){
+            len = bufsize - 1;
+        }
+        memcpy(sp, target->value, len);
+        sp[len] = '\0';
+    }
+
+    list_del(&target->list);
+    return target;
 }
 
 /* Remove an element from head of queue */
 element_t *q_remove_head(struct list_head *head, char *sp, size_t bufsize)
-{
-    return NULL;
+{   
+    if(!head){
+        return NULL;
+    }
+    return remove_element(list_first_entry(head, element_t, list), sp, bufsize);
 }
 
 /* Remove an element from tail of queue */
 element_t *q_remove_tail(struct list_head *head, char *sp, size_t bufsize)
 {
-    return NULL;
+    if(!head){
+        return NULL;
+    }
+    return remove_element(list_last_entry(head, element_t, list), sp, bufsize);
 }
 
 /* Return number of elements in queue */
